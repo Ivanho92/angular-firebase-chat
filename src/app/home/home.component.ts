@@ -18,7 +18,7 @@ import { MessageListComponent } from '@app/home/components/message-list.componen
     MatIconButton,
   ],
   template: `
-    <div class="container">
+    <div class="layout">
       <mat-toolbar color="primary">
         <span class="spacer"></span>
         <button mat-icon-button (click)="authService.logout()">
@@ -26,22 +26,40 @@ import { MessageListComponent } from '@app/home/components/message-list.componen
         </button>
       </mat-toolbar>
 
-      <app-message-list [messages]="messageService.messages()" />
+      <app-message-list
+        [messages]="messageService.messages()"
+        [activeUser]="authService.user()"
+      />
+
       <app-message-input (onNewMessage)="messageService.add$.next($event)" />
     </div>
   `,
-  styles: ``,
+  styles: `
+    .layout {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: 100dvh;
+    }
+
+    mat-toolbar {
+      box-shadow: 0px -7px 11px 0px var(--accent-color);
+    }
+
+    app-message-list {
+      height: 100%;
+      width: 100%;
+    }
+  `,
 })
 export default class HomeComponent {
-  protected readonly messageService = inject(MessageService);
-  protected readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  protected readonly authService = inject(AuthService);
+  protected readonly messageService = inject(MessageService);
 
   constructor() {
-    effect(() => {
-      const user = this.authService.user();
-      if (!user) {
-        void this.router.navigate(['auth', 'login']);
+    effect(async () => {
+      if (!this.authService.user()) {
+        await this.router.navigate(['auth', 'login']);
       }
     });
   }

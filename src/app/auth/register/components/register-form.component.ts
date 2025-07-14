@@ -12,74 +12,72 @@ import { Credentials } from '@app/core/models/credentials.model';
 @Component({
   selector: 'app-register-form',
   template: `
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" #ngForm="ngForm">
-      <mat-form-field appearance="fill">
-        <mat-label>email</mat-label>
-        <input
-          matNativeControl
-          formControlName="email"
-          type="email"
-          placeholder="email"
-        />
-        <mat-icon matPrefix>email</mat-icon>
-        @if (
-          (form.controls.email.dirty || $any(ngForm).submitted) &&
-          !form.controls.email.valid
-        ) {
-          <mat-error>Please provide a valid email</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>password</mat-label>
-        <input
-          matNativeControl
-          formControlName="password"
-          type="password"
-          placeholder="password"
-        />
-        <mat-icon matPrefix>lock</mat-icon>
-        @if (
-          (form.controls.password.dirty || $any(ngForm).submitted) &&
-          !form.controls.password.valid
-        ) {
-          <mat-error>Password must be at least 8 characters long</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>confirm password</mat-label>
-        <input
-          matNativeControl
-          formControlName="confirmPassword"
-          type="password"
-          placeholder="confirm password"
-        />
-        <mat-icon matPrefix>lock</mat-icon>
-        @if ((form.controls.confirmPassword.dirty || $any(ngForm).submitted) && !form.controls.confirmPassword.valid) {
-          <mat-error>
-            @if (form.controls.confirmPassword.hasError('passwordMismatch')) {
-              Must match password field
-            } @else {
-              Please confirm password
-            }
-          </mat-error>
-        }
-      </mat-form-field>
+    <div class="container">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" #ngForm="ngForm">
+        <mat-form-field appearance="fill">
+          <mat-label>email</mat-label>
+          <input
+            matNativeControl
+            formControlName="email"
+            type="email"
+            placeholder="email"
+          />
+          <mat-icon matPrefix>email</mat-icon>
+          @if ((form.controls.email.dirty || $any(ngForm).submitted) &&
+          !form.controls.email.valid) {
+            <mat-error>Please provide a valid email</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>password</mat-label>
+          <input
+            matNativeControl
+            formControlName="password"
+            type="password"
+            placeholder="password"
+          />
+          <mat-icon matPrefix>lock</mat-icon>
+          @if ((form.controls.password.dirty || $any(ngForm).submitted) &&
+          !form.controls.password.valid) {
+            <mat-error>Password must be at least 8 characters long</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>confirm password</mat-label>
+          <input
+            matNativeControl
+            formControlName="confirmPassword"
+            type="password"
+            placeholder="confirm password"
+          />
+          <mat-icon matPrefix>lock</mat-icon>
+          @if ((form.controls.confirmPassword.dirty || $any(ngForm).submitted) && !form.controls.confirmPassword.valid) {
+            <mat-error>
+              @if (form.controls.confirmPassword.hasError('passwordMismatch')) {
+                Must match password field
+              } @else {
+                Please confirm password
+              }
+            </mat-error>
+          }
+        </mat-form-field>
 
-      @if (status() === 'error') {
-        <mat-error>Could not create account with those details.</mat-error>
-      } @else if (status() === 'creating') {
-        <mat-spinner diameter="50"></mat-spinner>
-      }
+        @if (status() === 'error') {
+          <mat-error>Could not create account with those details.</mat-error>
+        } @else if (status() === 'creating') {
+          <mat-spinner diameter="50"></mat-spinner>
+        }
 
-      <button
-        mat-raised-button
-        color="accent"
-        type="submit"
-        [disabled]="status() === 'creating'"
-      >
-        Submit
-      </button>
-    </form>
+        <button
+          mat-raised-button
+          color="accent"
+          type="submit"
+          [disabled]="status() === 'creating'"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
   `,
   imports: [
     ReactiveFormsModule,

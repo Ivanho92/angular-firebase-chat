@@ -50,7 +50,7 @@ export class MessageService {
   constructor() {
     // reducers
     connect(this.state)
-      .with(this.messages$, (_, messages) => ({ messages }))
+      .with(this.messages$, (prev, messages) => ({ messages }))
       .with(
         this.add$.pipe(
           exhaustMap((message) => this.addMessage(message)),

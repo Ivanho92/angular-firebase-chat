@@ -21,13 +21,13 @@ interface AuthState {
   providedIn: 'root',
 })
 export class AuthService {
-  private auth = inject(AUTH);
+  private readonly auth = inject(AUTH);
 
   // sources
-  private user$ = authState(this.auth);
+  private readonly user$ = authState(this.auth);
 
   // state
-  private state = signal<AuthState>({
+  private readonly state = signal<AuthState>({
     user: undefined,
   });
 
@@ -35,7 +35,9 @@ export class AuthService {
   user = computed(() => this.state().user);
 
   constructor() {
-    connect(this.state).with(this.user$, (_, user) => ({ user }));
+    // reducers
+    connect(this.state)
+      .with(this.user$, (prev, user) => ({ user }));
   }
 
   login(credentials: Credentials) {
@@ -64,5 +66,9 @@ export class AuthService {
         ),
       ),
     );
+  }
+
+  async getToken() {
+    return await this.auth.currentUser?.getIdToken();
   }
 }
