@@ -1,11 +1,21 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { Message, NewMessage } from '@app/core/models/message.model';
 import { AuthService } from '@app/core/services/auth.service';
 import { FIRESTORE } from '@app/core/tokens/firestore.token';
 import { addDoc, collection, limit, orderBy, query } from 'firebase/firestore';
 import { connect } from 'ngxtension/connect';
 import { collectionData } from 'rxfire/firestore';
-import { catchError, defer, ignoreElements, Observable, of, Subject, } from 'rxjs';
+import {
+  catchError,
+  defer,
+  filter,
+  ignoreElements,
+  Observable,
+  of,
+  retry,
+  Subject,
+} from 'rxjs';
 import { exhaustMap, map } from 'rxjs/operators';
 
 interface MessageState {
@@ -31,8 +41,11 @@ export class MessageService {
   error = computed(() => this.state().error);
 
   // sources
-  messages$ = this.getMessages();
   add$ = new Subject<NewMessage>();
+  authUser$ = toObservable(this.authService.user);
+  messages$ = this.getMessages().pipe(
+    retry({ delay: () => this.authUser$.pipe(filter((user) => !!user)) }),
+  );
 
   constructor() {
     // reducers
@@ -62,7 +75,7 @@ export class MessageService {
   private addMessage(message: string) {
     const user = this.authService.user();
 
-    if (!user) throw new Error("No user!");
+    if (!user) throw new Error('No user!');
 
     const newMessage: Message = {
       author: user.email!,

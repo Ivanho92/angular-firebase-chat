@@ -16,7 +16,8 @@ export const passwordMatchesValidator: ValidatorFn = (
 };
 
 const removeError = (control: AbstractControl, error: string) => {
-  const errors = control.errors!;
+  const errors = control.errors;
+  if (!errors) return;
   delete errors[error];
   control.setErrors(Object.keys(errors).length ? errors : null);
 };

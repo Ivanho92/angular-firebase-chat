@@ -51,7 +51,7 @@ export class AuthService {
   }
 
   logout() {
-    signOut(this.auth);
+    void signOut(this.auth);
   }
 
   createAccount(credentials: Credentials) {

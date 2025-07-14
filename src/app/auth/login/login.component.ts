@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormComponent } from '@app/auth/login/components/login-form.component';
@@ -26,7 +26,16 @@ import { AuthService } from '@app/core/services/auth.service';
   `,
 })
 export default class LoginComponent {
-  public loginService = inject(LoginService);
-  // public authService = inject(AuthService);
-  // private router = inject(Router);
+  protected readonly loginService = inject(LoginService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
+  constructor() {
+    effect(() => {
+      const user = this.authService.user();
+      if (user) {
+        void this.router.navigate(['home']);
+      }
+    })
+  }
 }
