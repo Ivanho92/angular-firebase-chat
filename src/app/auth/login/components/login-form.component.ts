@@ -36,6 +36,13 @@ import { LoginStatus } from '../login.service';
         <mat-icon matPrefix>lock</mat-icon>
       </mat-form-field>
 
+      @if (loginStatus() === 'error') {
+        <mat-error>Could not log you in with those details.</mat-error>
+      }
+      @if (loginStatus() === 'authenticating') {
+        <mat-spinner diameter="50"></mat-spinner>
+      }
+
       <button
         mat-raised-button
         color="accent"
