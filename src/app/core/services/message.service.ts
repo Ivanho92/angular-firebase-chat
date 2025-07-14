@@ -1,5 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Message, NewMessage } from '@app/core/models/message.model';
+import { AuthService } from '@app/core/services/auth.service';
 import { FIRESTORE } from '@app/core/tokens/firestore.token';
 import { addDoc, collection, limit, orderBy, query } from 'firebase/firestore';
 import { connect } from 'ngxtension/connect';
@@ -17,6 +18,7 @@ interface MessageState {
 })
 export class MessageService {
   private readonly firestore = inject(FIRESTORE);
+  private readonly authService = inject(AuthService);
 
   // state
   private readonly state = signal<MessageState>({
@@ -35,7 +37,7 @@ export class MessageService {
   constructor() {
     // reducers
     connect(this.state)
-      .with(this.messages$, (_state, messages) => ({ messages }))
+      .with(this.messages$, (_, messages) => ({ messages }))
       .with(
         this.add$.pipe(
           exhaustMap((message) => this.addMessage(message)),
@@ -58,8 +60,12 @@ export class MessageService {
   }
 
   private addMessage(message: string) {
+    const user = this.authService.user();
+
+    if (!user) throw new Error("No user!");
+
     const newMessage: Message = {
-      author: 'me@test.com',
+      author: user.email!,
       content: message,
       created: Date.now().toString(),
     };
