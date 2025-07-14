@@ -9,11 +9,15 @@ import { AuthService } from '@app/core/services/auth.service';
   selector: 'app-login',
   template: `
     <div class="container gradient-bg">
-      <app-login-form
-        [loginStatus]="loginService.status()"
-        (login)="loginService.login$.next($event)"
-      />
-      <a routerLink="/auth/register">Create account</a>
+      @if(!authService.user()){
+        <app-login-form
+          [loginStatus]="loginService.status()"
+          (login)="loginService.login$.next($event)"
+        />
+        <a routerLink="/auth/register">Create account</a>
+      } @else {
+        <mat-spinner diameter="50" />
+      }
     </div>
   `,
   providers: [LoginService],
@@ -27,7 +31,7 @@ import { AuthService } from '@app/core/services/auth.service';
 })
 export default class LoginComponent {
   protected readonly loginService = inject(LoginService);
-  private readonly authService = inject(AuthService);
+  protected readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   constructor() {

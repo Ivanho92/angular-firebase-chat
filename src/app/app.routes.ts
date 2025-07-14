@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { RegisterService } from '@app/auth/register/register.service';
+import { isAuthenticatedGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -10,5 +10,6 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () => import('./home/home.component'),
+    canActivate: [isAuthenticatedGuard],
   },
 ];
