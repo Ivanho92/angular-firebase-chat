@@ -1,11 +1,10 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, ResourceStatus } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormField, MatInput, MatInputModule, MatPrefix, } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RegisterStatus } from '@app/auth/register/register.service';
 import { passwordMatchesValidator } from '@app/auth/register/utils/password-matches.directive';
 import { Credentials } from '@app/core/models/credentials.model';
 
@@ -114,10 +113,10 @@ import { Credentials } from '@app/core/models/credentials.model';
   `,
 })
 export class RegisterFormComponent {
-  status = input.required<RegisterStatus>();
+  status = input.required<ResourceStatus>();
   register = output<Credentials>();
 
-  private fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
 
   form = this.fb.nonNullable.group(
     {

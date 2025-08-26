@@ -11,7 +11,7 @@ import { AuthService } from '@app/core/services/auth.service';
     <div class="container gradient-bg">
       @if(!authService.user()){
         <app-login-form
-          [loginStatus]="loginService.status()"
+          [loginStatus]="loginService.userAuthenticated.status()"
           (login)="loginService.login$.next($event)"
         />
         <a routerLink="/auth/register">Create account</a>

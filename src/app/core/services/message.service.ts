@@ -60,7 +60,7 @@ export class MessageService {
       );
   }
 
-  private getMessages(): Observable<Message[]> {
+  private getMessages() {
     const messagesCollection = query(
       collection(this.firestore, 'messages'),
       orderBy('created', 'desc'),

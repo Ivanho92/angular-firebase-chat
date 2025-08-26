@@ -8,7 +8,7 @@ import { AuthService } from '@app/core/services/auth.service';
   selector: 'app-register',
   template: `
     <app-register-form
-      [status]="registerService.status"
+      [status]="registerService.userCreated.status()"
       (register)="registerService.createUser$.next($event)"
     />
   `,
@@ -21,10 +21,9 @@ export default class RegisterComponent {
   private readonly router = inject(Router);
 
   constructor() {
-    effect(() => {
-      const user = this.authService.user();
-      if (user) {
-        void this.router.navigate(['home']);
+    effect(async () => {
+      if (this.authService.user()) {
+        await this.router.navigate(['home']);
       }
     })
   }

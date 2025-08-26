@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, ResourceStatus } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Credentials } from '@app/core/models/credentials.model';
-import { LoginStatus } from '../login.service';
 
 @Component({
   selector: 'app-login-form',
@@ -82,10 +81,10 @@ import { LoginStatus } from '../login.service';
   `,
 })
 export class LoginFormComponent {
-  loginStatus = input.required<LoginStatus>();
+  loginStatus = input.required<ResourceStatus>();
   login = output<Credentials>();
 
-  private fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
 
   loginForm = this.fb.nonNullable.group({
     email: [''],
